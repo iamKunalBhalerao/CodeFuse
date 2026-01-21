@@ -1,0 +1,22 @@
+{
+  "name": "@repo/auth",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Authentication package for handling user authentication and authorization",
+  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "jsonwebtoken": "^9.0.3"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.10",
+    "@repo/shared-types": "workspace:*",
+    "@repo/env": "workspace:*",
+    "@repo/errors": "workspace:*"
+  }
+}

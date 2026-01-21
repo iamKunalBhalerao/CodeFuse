@@ -1,0 +1,76 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String @id @default(uuid())
+  fullName     String
+  email        String @unique
+  password     String
+  refreshToken String @default("")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  rooms       Room[]       @relation("RoomOwner")
+  roomMembers RoomMember[]
+}
+
+model Room {
+  id      String @id @default(uuid())
+  name    String @unique
+  ownerId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  owner User @relation("RoomOwner", fields: [ownerId], references: [id])
+
+  members   RoomMember[]
+  snapshots Snapshot[]
+}
+
+model RoomMember {
+  id         String     @id @default(uuid())
+  userId     String
+  roomId     String
+  permission Permission @default(VIEWER)
+
+  user User @relation(fields: [userId], references: [id])
+  room Room @relation(fields: [roomId], references: [id])
+}
+
+model Snapshot {
+  id      String @id @default(uuid())
+  roomId  String
+  version Int
+  data    String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  room Room @relation(fields: [roomId], references: [id])
+
+  @@index([roomId, version])
+}
+
+model RoomEvent {
+  id        String   @id @default(uuid())
+  roomId    String
+  type      String
+  payload   Json
+  createdAt DateTime @default(now())
+
+  @@index([roomId])
+  @@map("room_events")
+}
+
+enum Permission {
+  OWNER
+  EDITOR
+  VIEWER
+}

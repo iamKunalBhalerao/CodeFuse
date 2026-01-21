@@ -1,0 +1,44 @@
+{
+  "name": "@apps/codefuse-core",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Core - HTTP Backned",
+  "main": "src/server.ts",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "tsx watch --tsconfig tsconfig.json src/server.ts",
+    "clean": "rm -rf dist",
+    "prebuild": "npm run clean",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src/**/*.ts",
+    "format": "prettier --write \"src/**/*.ts\""
+  },
+  "devDependencies": {
+    "@infra/db": "workspace:*",
+    "@repo/auth": "workspace:*",
+    "@repo/env": "workspace:*",
+    "@repo/errors": "workspace:*",
+    "@repo/shared-types": "workspace:*",
+    "@tool/typescript-config": "workspace:*",
+    "@types/bcrypt": "^6.0.0",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^25.0.8",
+    "ts-node-dev": "^2.0.0",
+    "tsx": "^4.21.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "typescript": "^5.9.3"
+  }
+}
