@@ -41,7 +41,8 @@ export const signInController = async (
   next: NextFunction
 ) => {
   try {
-    const { tokens, user } = await signInService(req.body);
+    const data = req.body;
+    const { tokens, user } = await signInService(data);
 
     res
       .cookie("accessToken", tokens.accessToken, await CookieOptions)

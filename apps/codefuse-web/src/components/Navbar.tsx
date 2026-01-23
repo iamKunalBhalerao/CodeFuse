@@ -3,8 +3,11 @@
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { ThemeToggle } from "./theme-toggle";
+import { useAuthStore } from "@/store/auth.store";
 
 export function Navbar() {
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+
   return (
     <>
       <header>
@@ -56,18 +59,28 @@ export function Navbar() {
                   Contact Us
                 </Link>
               </div>
+              <ThemeToggle />
               <div className="flex gap-2">
-                <ThemeToggle />
-                <Button variant={"outline"} asChild size="lg">
-                  <Link href="/auth/signup">
-                    <span className="btn-label">Sign Up</span>
-                  </Link>
-                </Button>
-                <Button asChild size="lg">
-                  <Link href="/auth/signin">
-                    <span className="btn-label">Sign In</span>
-                  </Link>
-                </Button>
+                {isAuthenticated ? (
+                  <Button asChild size="lg">
+                    <Link href="/dashboard">
+                      <span className="btn-label">DashBoard</span>
+                    </Link>
+                  </Button>
+                ) : (
+                  <>
+                    <Button variant={"outline"} asChild size="lg">
+                      <Link href="/auth/signup">
+                        <span className="btn-label">Sign Up</span>
+                      </Link>
+                    </Button>
+                    <Button asChild size="lg">
+                      <Link href="/auth/signin">
+                        <span className="btn-label">Sign In</span>
+                      </Link>
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
           </nav>

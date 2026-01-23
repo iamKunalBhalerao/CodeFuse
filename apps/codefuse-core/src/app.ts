@@ -1,5 +1,5 @@
 import cors from "cors";
-import { env } from "@repo/env";
+import { env } from "@repo/env/server";
 import CookieParser from "cookie-parser";
 import express, { Express, Request, Response } from "express";
 import { globalErrorHandler } from "./middlewares/globalErrorHandler.middleware";

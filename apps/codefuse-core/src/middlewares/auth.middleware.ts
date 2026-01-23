@@ -9,32 +9,22 @@ export const authMiddleware = async (
   next: NextFunction,
 ) => {
   try {
-    const token = req.cookies?.token || req.cookies?.access_token;
-
+    const token = req.cookies?.accessToken || req.cookies?.accessToken;
     if (!token) {
-      throw new UnauthorizedError("Unauthorized: No Token provided!");
+      return next(new UnauthorizedError("Unauthorized: No Token provided!"));
     }
 
     const decoded = await verifyToken(token);
-
     req.user = decoded;
 
     next();
   } catch (error: any) {
-    // Error catch: Expired Token
     if (error instanceof jwt.TokenExpiredError) {
-      throw new UnauthorizedError("Unauthorized: Token has expierd!");
+      return next(new UnauthorizedError("Unauthorized: Token has expierd!"));
     }
-
     if (error instanceof jwt.JsonWebTokenError) {
-      throw new UnauthorizedError("Forbiden: Invalid Token!");
+      return next(new UnauthorizedError("Forbiden: Invalid Token!"));
     }
-
-    console.error("Auth Middleware Error:", error);
-    res.status(500).json({
-      success: false,
-      message: "Internal Server Error!",
-    });
-    return;
+    return next(error);
   }
 };

@@ -35,3 +35,5 @@ export class ConflictError extends CoreError {
     super(message, 409);
   }
 }
+
+export { CoreError } from "./core.error";

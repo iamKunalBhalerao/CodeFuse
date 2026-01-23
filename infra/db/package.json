@@ -22,16 +22,16 @@
   "license": "ISC",
   "packageManager": "pnpm@10.28.0",
   "devDependencies": {
-    "@tool/typescript-config": "workspace:*",
     "@repo/env": "workspace:*",
+    "@tool/typescript-config": "workspace:*",
     "@types/node": "^25.0.9",
     "@types/pg": "^8.16.0",
-    "prisma": "^7.2.0",
+    "prisma": "^7.3.0",
     "typescript": "^5.9.3"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.2.0",
-    "@prisma/client": "^7.2.0",
+    "@prisma/client": "^7.3.0",
     "dotenv": "^17.2.3",
     "pg": "^8.17.1"
   }

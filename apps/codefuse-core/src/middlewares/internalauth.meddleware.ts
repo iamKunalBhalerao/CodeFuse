@@ -1,4 +1,4 @@
-import { env } from "@repo/env";
+import { env } from "@repo/env/server";
 import { UnauthorizedError } from "@repo/errors";
 import { NextFunction, Request, Response } from "express";
 

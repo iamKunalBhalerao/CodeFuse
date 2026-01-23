@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { env } from "@repo/env";
+import { env } from "@repo/env/server";
 import { defineConfig } from "prisma/config";
 
 export default defineConfig({

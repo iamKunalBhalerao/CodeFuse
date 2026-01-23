@@ -1,15 +1,62 @@
-import { LogoIcon } from "@/components/logo";
+"use client";
+import axios from "axios";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import Link from "next/link";
+import { useAuthStore } from "@/store/auth.store";
+import { SignUpData } from "@/types/auth.types";
+import { ClientEnv } from "@repo/env";
+import { useRouter } from "next/navigation";
+import { ChangeEvent, useState } from "react";
 
 export default function SignUpPage() {
+  const login = useAuthStore((state) => state.login);
+
+  const router = useRouter();
+  const [formData, setFormData] = useState<SignUpData>({
+    fullName: "",
+    email: "",
+    password: "",
+  });
+  const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      const { data } = await axios.post(
+        `${ClientEnv.NEXT_PUBLIC_CORE_API_URL}/v1/auth/signup`,
+        formData,
+      );
+      if (!data.success) {
+        throw new Error(data.error || "Something Wrong!");
+      }
+
+      login(data);
+
+      setLoading(false);
+      router.push("/");
+      router.refresh();
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("An unexpected error occurred");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <section className="flex min-h-screen bg-zinc-50 px-4 py-16 md:py-32 dark:bg-transparent">
       <form
-        action=""
         className="bg-muted m-auto h-fit w-full max-w-sm overflow-hidden rounded-[calc(var(--radius)+.125rem)] border shadow-md shadow-zinc-950/5 dark:[--color-muted:var(--color-zinc-900)]"
+        onSubmit={handleSubmit}
       >
         <div className="bg-card -m-px rounded-[calc(var(--radius)+.125rem)] border p-8 pb-6">
           <div className="text-center">
@@ -30,7 +77,10 @@ export default function SignUpPage() {
                   required
                   name="firstname"
                   id="firstname"
-                  placeholder="Jhon"
+                  placeholder="John"
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    setFormData({ ...formData, fullName: e.target.value })
+                  }
                 />
               </div>
               <div className="space-y-2">
@@ -43,6 +93,12 @@ export default function SignUpPage() {
                   name="lastname"
                   id="lastname"
                   placeholder="Doe"
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    setFormData({
+                      ...formData,
+                      fullName: formData.fullName + " " + e.target.value,
+                    })
+                  }
                 />
               </div>
             </div>
@@ -57,6 +113,9 @@ export default function SignUpPage() {
                 name="email"
                 id="email"
                 placeholder="example@example.com"
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
               />
             </div>
 
@@ -81,12 +140,22 @@ export default function SignUpPage() {
                 id="pwd"
                 className="input sz-md variant-mixed"
                 placeholder="Enter Password"
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
               />
             </div>
 
-            <Button className="w-full cursor-pointer">Sign In</Button>
-          </div>
+            {error && <p className="text-sm text-red-600">{error}</p>}
 
+            <Button
+              type="submit"
+              className="w-full cursor-pointer"
+              disabled={loading}
+            >
+              {loading ? "Creating account..." : "Sign Up"}
+            </Button>
+          </div>
         </div>
 
         <div className="p-3">

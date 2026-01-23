@@ -1,32 +1,57 @@
 import { WebSocket } from "ws";
-import { handleJoin } from "./handlers/join.handler";
-import { handleOp } from "./handlers/op.handler";
-import { handlePresence } from "./handlers/presence.handler";
-import { Socket } from "./types/ws.types";
+import { users } from "./server";
+import { Users } from "./types/ws.types";
 
-export const handleConnection = async (socket: Socket) => {
+export const handleConnection = (socket: WebSocket) => {
+  // Init
+  const currentUser: Users = { socket, rooms: [], userId: "" };
+  users.push(currentUser);
+
   socket.on("message", (data) => {
-    const message = JSON.parse(data as unknown as string);
+    const message = JSON.parse(data.toString());
 
-    switch (message.type) {
-      case "join_room":
-        handleJoin(socket, message);
-        break;
+    if (message.type === "JOIN_ROOM") {
+      const { roomId, userId } = message.payload;
+      currentUser.userId = userId;
+      if (!currentUser.rooms.includes(roomId)) {
+        currentUser.rooms.push(roomId);
+      }
+    }
 
-      case "CRDT_OP":
-        handleOp(socket, message);
-        break;
+    if (message.type === "LEAVE_ROOM") {
+      const user = users.find((user) => user.socket === socket);
+      if (!user || !user.rooms.includes(message.payload.roomId)) return;
+      user.rooms = user.rooms.filter((room) => room !== message.payload.roomId);
+    }
 
-      case "PRESENCE":
-        handlePresence(socket, message);
-        break;
+    if (message.type === "YJS_UPDATE") {
+      const { roomId, state } = message.payload;
 
-      default:
-        console.log("Unknown message type:", message.type);
+      users.forEach((user) => {
+        if (user.socket === socket) return;
+        if (user.rooms?.includes(roomId)) {
+          user.socket.send(
+            JSON.stringify({
+              type: "YJS_UPDATE",
+              payload: { roomId, state },
+            }),
+          );
+        }
+      });
     }
   });
 
-  socket.on("close", () => {
-    console.log("WebSocket connection closed");
+  // To Handle Client Close Event
+  socket.on("close", (code, reason) => {
+    const index = users.indexOf(currentUser);
+    if (index > -1) users.splice(index, 1);
+    console.log(
+      `Client disconnected: ${code} - ${reason.toString()}, Remaining: ${users.length}`,
+    );
+  });
+
+  //   To handle Error Event
+  socket.on("error", (error: unknown) => {
+    console.error(`Error occured: ${(error as Error).message}`);
   });
 };

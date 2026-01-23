@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { CoreError } from "../libs/errors/core.error";
+import { CoreError } from "@repo/errors";
 
 export const globalErrorHandler = (
   err: Error,
@@ -14,11 +14,12 @@ export const globalErrorHandler = (
     });
   }
 
-  // Unknown error
-  console.log("UNEXPECTED ERROR:", err);
+  // Debug line - baad mein remove kar dena
+  console.log("Error type:", err.constructor.name);
+  console.log("Is CoreError:", err instanceof CoreError);
 
   return res.status(500).json({
     success: false,
-    message: "Iternal Server Error! ",
+    message: "Internal Server Error! ",
   });
 };

@@ -48,7 +48,7 @@ model Snapshot {
   id      String @id @default(uuid())
   roomId  String
   version Int
-  data    String
+  state   Bytes
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt

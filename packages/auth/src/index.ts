@@ -1,4 +1,4 @@
-import { env } from "@repo/env";
+import { env } from "@repo/env/server";
 import jwt from "jsonwebtoken";
 import { TokenPayload } from "@repo/shared-types/core.types";
 import { BadRequestError, UnauthorizedError } from "@repo/errors";
@@ -40,22 +40,14 @@ export const generateRefreshToken = ({ id, email }: TokenPayload) => {
 export const generateTokens = (payload: TokenPayload) => {
   return {
     accessToken: generateAccessToken(payload),
-    refreshToken: generateAccessToken(payload),
+    refreshToken: generateRefreshToken(payload),
   };
 };
 
 export const verifyToken = (token: string) => {
-  try {
-    return jwt.verify(token, env.JWT_SECRET) as TokenPayload;
-  } catch (error) {
-    throw new UnauthorizedError("Invalid or expired token!");
-  }
+  return jwt.verify(token, env.JWT_SECRET) as TokenPayload;
 };
 
 export const verifyRefreshToken = (refreshToken: string) => {
-  try {
-    return jwt.verify(refreshToken, env.JWT_SECRET) as TokenPayload;
-  } catch (error) {
-    throw new UnauthorizedError("Invalid or expired refresh token!")!;
-  }
+  return jwt.verify(refreshToken, env.JWT_SECRET) as TokenPayload;
 };

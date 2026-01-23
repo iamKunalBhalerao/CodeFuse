@@ -7,7 +7,6 @@ export interface SignUp {
 }
 
 export interface SignIn {
-  fullName: string;
   email: string;
   password: string;
 }

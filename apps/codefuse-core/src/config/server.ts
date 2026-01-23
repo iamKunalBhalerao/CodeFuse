@@ -1,4 +1,4 @@
-import { env } from "@repo/env";
+import { env } from "@repo/env/server";
 
 const PORT = env.CORE_PORT || 5000;
 const NODE_ENV = env.NODE_ENV;
