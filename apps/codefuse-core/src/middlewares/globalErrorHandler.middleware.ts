@@ -16,6 +16,7 @@ export const globalErrorHandler = (
 
   // Debug line - baad mein remove kar dena
   console.log("Error type:", err.constructor.name);
+  console.log(err);
   console.log("Is CoreError:", err instanceof CoreError);
 
   return res.status(500).json({

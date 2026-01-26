@@ -38,13 +38,13 @@ export const createRoomService = async ({
 };
 
 export const joinRoomService = async ({
-  roomId,
+  name,
   userId,
 }: {
-  roomId: string;
+  name: string;
   userId: string;
 }) => {
-  const room = await findRoomById(roomId);
+  const room = await findRoomByName(name);
   if (!room) throw new NotFoundError("Room Not Found!");
 
   const joinRoomResult = await joinRoom({ roomId: room.id, userId });

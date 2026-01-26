@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Button } from "./ui/button";
 import { ThemeToggle } from "./theme-toggle";
 import { useAuthStore } from "@/store/auth.store";
+import ProfileDropDown from "./ProfileDropDown";
 
 export function Navbar() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -62,11 +63,12 @@ export function Navbar() {
               <ThemeToggle />
               <div className="flex gap-2">
                 {isAuthenticated ? (
-                  <Button asChild size="lg">
-                    <Link href="/dashboard">
-                      <span className="btn-label">DashBoard</span>
-                    </Link>
-                  </Button>
+                  // <Button asChild size="lg">
+                  //   <Link href="/dashboard">
+                  //     <span className="btn-label">DashBoard</span>
+                  //   </Link>
+                  // </Button>
+                  <ProfileDropDown />
                 ) : (
                   <>
                     <Button variant={"outline"} asChild size="lg">

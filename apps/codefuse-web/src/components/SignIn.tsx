@@ -29,11 +29,13 @@ export default function SignInPage() {
     try {
       const { data } = await axios.post(
         `${ClientEnv.NEXT_PUBLIC_CORE_API_URL}/v1/auth/signin`,
-        formData,
+        formData,{
+          withCredentials: true,
+        }
       );
 
       if (!data.success) {
-        throw new Error("Invalid credentials");
+              throw new Error(data.message || "Failed to Signing In!");
       }
 
       login(data);
@@ -42,9 +44,16 @@ export default function SignInPage() {
       router.push("/");
       router.refresh();
     } catch (err: unknown) {
-      if (err instanceof Error) {
+      if (axios.isAxiosError(err)) {
+        // Accessing the error message sent from the backend response body
+        const backendMessage = err.response?.data?.message || err.response?.data?.error;
+        setError(backendMessage || "Server error occurred");
+      } 
+
+      else if (err instanceof Error) {
         setError(err.message);
-      } else {
+      } 
+      else {
         setError("An unexpected error occurred");
       }
     } finally {

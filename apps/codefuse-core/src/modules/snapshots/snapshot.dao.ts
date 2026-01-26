@@ -1,4 +1,5 @@
 import { prisma } from "@infra/db";
+import { SnapShotSave } from "@repo/shared-types/core.types";
 
 export const getSnapShotByRoomId = async (roomId: string) => {
   return await prisma.snapshot.findFirst({
@@ -15,18 +16,15 @@ export const deleteOldSnapshotsByRoomId = async (roomId: string) => {
 
 export const saveSnapShotInDB = async ({
   roomId,
-  version,
-  data,
+  state,
 }: {
   roomId: string;
-  version: number;
-  data: string;
+  state: Buffer;
 }) => {
   await prisma.snapshot.create({
     data: {
-      version,
       roomId,
-      data,
+      state,
     },
   });
 };

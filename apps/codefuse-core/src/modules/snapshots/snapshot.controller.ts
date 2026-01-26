@@ -29,12 +29,11 @@ export const SaveSnapShotController = async (
 ) => {
   try {
     const roomId = req.params.roomId as string;
-    const { version, data } = req.body;
+    const { state } = req.body;
 
     await saveSnapShotService({
       roomId,
-      version: Number(version),
-      data,
+      state,
     });
 
     res.status(201).json({

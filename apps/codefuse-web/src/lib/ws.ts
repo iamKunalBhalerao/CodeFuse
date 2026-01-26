@@ -9,8 +9,10 @@ export const ConnectWS = async (roomId: string, userId: string, doc: Y.Doc) => {
     socket.send(
       JSON.stringify({
         type: "JOIN_ROOM",
-        roomId,
-        userId,
+        payload: {
+          roomId,
+          userId,
+        }
       }),
     );
     bindYjsToWS(doc, socket, roomId);

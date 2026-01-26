@@ -1,20 +1,26 @@
+"use client";
+import dynamic from "next/dynamic";
 import React from "react";
-import EditorDemo from "@/components/EditorDemo";
+// import Editor from "@/components/Editor";
 
-export default function Room({
+const Editor = dynamic(() => import("@/components/Editor"), { ssr: false });
+
+const page = async ({
   params,
 }: {
   params: {
     roomId: string;
   };
-}) {
-  const { roomId } = params;
+}) => {
+  const roomId = (await params).roomId;
 
   return (
     <>
-      <main className="">
-        <EditorDemo roomId={roomId} />
-      </main>
+      <div>
+        <Editor roomName={roomId} />
+      </div>
     </>
   );
-}
+};
+
+export default page;

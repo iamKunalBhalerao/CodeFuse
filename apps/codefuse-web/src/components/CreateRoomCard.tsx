@@ -1,14 +1,66 @@
-import React from "react";
+"use client";
+import React, { ChangeEvent, useState } from "react";
+import axios from "axios";
+import Link from "next/link";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { ClientEnv } from "@repo/env";
 
 export default function CreateRoomCard() {
+  const router = useRouter();
+  const [formData, setFormData] = useState<{ roomName: string }>({
+    roomName: "",
+  });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      const { data } = await axios.post(
+        `${ClientEnv.NEXT_PUBLIC_CORE_API_URL}/v1/rooms/create`,
+        {
+          name: formData.roomName,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (!data.success) {
+        throw new Error(data.message || "Failed to create room!");
+      }
+
+      setLoading(false);
+      router.push(`/room/${data.room.id}`);
+      router.refresh();
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        // Accessing the error message sent from the backend response body
+        const backendMessage = err.response?.data?.message || err.response?.data?.error;
+        setError(backendMessage || "Server error occurred");
+      } 
+
+      else if (err instanceof Error) {
+        setError(err.message);
+      } 
+      else {
+        setError("An unexpected error occurred");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <form
-        action=""
+        onSubmit={submitHandler}
         className="bg-muted m-auto h-fit w-full max-w-sm overflow-hidden rounded-[calc(var(--radius)+.125rem)] border shadow-md shadow-zinc-950/5 dark:[--color-muted:var(--color-zinc-900)]"
       >
         <div className="bg-card -m-px rounded-[calc(var(--radius)+.125rem)] border p-8 pb-6">
@@ -27,11 +79,18 @@ export default function CreateRoomCard() {
                 required
                 name="room-name"
                 id="room-name"
-                placeholder="example@example.com"
+                placeholder="Room123"
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setFormData({ ...formData, roomName: e.target.value })
+                }
               />
             </div>
 
-            <Button className="w-full cursor-pointer">Create Room</Button>
+            {error && <p className="text-sm text-red-600">{error}</p>}
+
+            <Button className="w-full cursor-pointer" disabled={loading}>
+              {loading ? "Creating...." : "Create Room"}
+            </Button>
           </div>
         </div>
 

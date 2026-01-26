@@ -8,8 +8,8 @@ import {
 
 const roomsRouter: Router = Router();
 
-roomsRouter.route("/:roomId").get(authMiddleware, getRoomInfoController);
+roomsRouter.route("/:name").get(authMiddleware, getRoomInfoController);
 roomsRouter.route("/create").post(authMiddleware, createRoomController);
-roomsRouter.route("/join/:roomId").post(authMiddleware, joinRoomController);
+roomsRouter.route("/join/:name").post(authMiddleware, joinRoomController);
 
 export default roomsRouter;

@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction, CookieOptions } from "express";
 import { SignInRequest, SignUpRequest } from "@repo/shared-types/core.types";
 import {
   logoutService,
@@ -6,18 +6,33 @@ import {
   signInService,
   signUpService,
 } from "./auth.service";
-import { CookieOptions } from "@repo/shared-types/index";
+import { httpCookieOptions } from "@repo/shared-types/index";
+
+const httpOptions = {
+  httpOnly: true,
+  secure: true,
+};
 
 export const signUpController = async (
   req: SignUpRequest,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const { tokens, user } = await signUpService(req.body);
     res
-      .cookie("accessToken", tokens.accessToken, await CookieOptions)
-      .cookie("refreshToken", tokens.refreshToken, await CookieOptions)
+      .cookie(
+        "accessToken",
+        tokens.accessToken,
+        // httpCookieOptions as CookieOptions,
+        httpOptions,
+      )
+      .cookie(
+        "refreshToken",
+        tokens.refreshToken,
+        // httpCookieOptions as CookieOptions,
+        httpOptions,
+      )
       .status(201)
       .json({
         success: true,
@@ -38,15 +53,25 @@ export const signUpController = async (
 export const signInController = async (
   req: SignInRequest,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const data = req.body;
     const { tokens, user } = await signInService(data);
 
     res
-      .cookie("accessToken", tokens.accessToken, await CookieOptions)
-      .cookie("refreshToken", tokens.refreshToken, await CookieOptions)
+      .cookie(
+        "accessToken",
+        tokens.accessToken,
+        // httpCookieOptions as CookieOptions,
+        httpOptions,
+      )
+      .cookie(
+        "refreshToken",
+        tokens.refreshToken,
+        // httpCookieOptions as CookieOptions,
+        httpOptions,
+      )
       .status(201)
       .json({
         success: true,
@@ -67,7 +92,7 @@ export const signInController = async (
 export const logoutController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const userId = req.user?.id as string;
@@ -76,8 +101,8 @@ export const logoutController = async (
     }
 
     res
-      .clearCookie("accessToken")
-      .clearCookie("refreshToken")
+      .clearCookie("accessToken", httpOptions)
+      .clearCookie("refreshToken", httpOptions)
       .status(201)
       .json({
         success: true,
@@ -91,7 +116,7 @@ export const logoutController = async (
 export const refreshTokenController = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const refreshToken = req.cookies.refreshToken as string;
@@ -106,8 +131,18 @@ export const refreshTokenController = async (
     const { tokens, user } = await refreshTokenService(refreshToken);
 
     res
-      .cookie("accessToken", tokens.accessToken, await CookieOptions)
-      .cookie("refreshToken", tokens.refreshToken, await CookieOptions)
+      .cookie(
+        "accessToken",
+        tokens.accessToken,
+        // httpCookieOptions as CookieOptions,
+        httpOptions,
+      )
+      .cookie(
+        "refreshToken",
+        tokens.refreshToken,
+        // httpCookieOptions as CookieOptions,
+        httpOptions,
+      )
       .status(200)
       .json({
         success: true,

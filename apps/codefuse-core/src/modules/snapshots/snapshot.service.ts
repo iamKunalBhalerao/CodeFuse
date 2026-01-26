@@ -10,6 +10,7 @@ import {
   saveSnapShotInDB,
 } from "./snapshot.dao";
 import { isRoomMember } from "../../helper/permission.helper";
+import { SnapShotSave } from "@repo/shared-types/core.types";
 
 export const getSnapShotService = async ({
   roomId,
@@ -30,21 +31,15 @@ export const getSnapShotService = async ({
   return snapshot;
 };
 
-export const saveSnapShotService = async ({
-  roomId,
-  version,
-  data,
-}: {
-  roomId: string;
-  version: number;
-  data: string;
-}) => {
-  if (!roomId || !data) throw new BadRequestError("Invalid data provided");
+export const saveSnapShotService = async ({ roomId, state }: SnapShotSave) => {
+  if (!roomId || !state) throw new BadRequestError("Invalid data provided");
+
+  const BufferState = Buffer.from(state, "base64");
 
   const room = await findRoomById(roomId);
   if (!room) throw new NotFoundError("Room not found!");
 
   await deleteOldSnapshotsByRoomId(room.id);
 
-  await saveSnapShotInDB({ roomId: room.id, version, data });
+  await saveSnapShotInDB({ roomId: room.id, state: BufferState });
 };

@@ -7,9 +7,14 @@ import { globalErrorHandler } from "./middlewares/globalErrorHandler.middleware"
 const app: Express = express();
 
 app.use(express.json());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 app.use(express.urlencoded({ extended: true }));
 app.use(CookieParser());
-app.use(cors());
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Welcome to CodeFuse Core API!");

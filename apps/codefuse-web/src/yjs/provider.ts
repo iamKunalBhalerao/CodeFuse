@@ -1,13 +1,17 @@
 import * as Y from "yjs";
 
-export const bindYjsToWS = async (doc: Y.Doc, socket: WebSocket, roomId: string) => {
+export const bindYjsToWS = async (
+  doc: Y.Doc,
+  socket: WebSocket,
+  roomId: string,
+) => {
   doc.on("update", (update) => {
     socket.send(
       JSON.stringify({
         type: "YJS_UPDATE",
         payload: {
-          state: Array.from(update),
-          roomId
+          state: Buffer.from(update).toString("base64"), // <-- base64 string
+          roomId,
         },
       }),
     );
@@ -15,7 +19,9 @@ export const bindYjsToWS = async (doc: Y.Doc, socket: WebSocket, roomId: string)
 
   socket.onmessage = (event) => {
     const message = JSON.parse(event.data);
-    const update = new Uint8Array(message.payload.state);
-    Y.applyUpdate(doc, update);
+    if (message.type === "YJS_UPDATE") {
+      const update = new Uint8Array(Buffer.from(message.payload.state, "base64"));
+      Y.applyUpdate(doc, update);
+    }
   };
 };

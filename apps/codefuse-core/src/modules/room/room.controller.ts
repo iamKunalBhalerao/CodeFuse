@@ -34,14 +34,14 @@ export const joinRoomController = async (
 ) => {
   try {
     const userId = req.user?.id as string;
-    const roomId = req.params.roomId as string;
+    const name = req.params.name as string;
 
-    const joinRoomResult = await joinRoomService({ roomId, userId });
+    const roomData = await joinRoomService({ name, userId });
 
     res.status(201).json({
       success: true,
       message: "Room Joined Successfully.",
-      joinRoomResult,
+      roomData,
     });
   } catch (error) {
     next(error);

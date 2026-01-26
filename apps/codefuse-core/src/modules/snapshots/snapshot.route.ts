@@ -10,7 +10,7 @@ const snapshotRouter: Router = Router();
 
 snapshotRouter.route("/of/:roomId").get(authMiddleware, getSnapShotController);
 snapshotRouter
-  .route("/internal/room/:roomId")
-  .post(authMiddleware, internalAuth, SaveSnapShotController);
+  .route("/internal/:roomId")
+  .post(internalAuth, SaveSnapShotController);
 
 export default snapshotRouter;
