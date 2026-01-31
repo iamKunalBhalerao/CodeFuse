@@ -9,7 +9,10 @@ a,
 .bg-background,
 .bg-card,
 .bg-muted {
-  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.2s ease;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.2s ease;
 }
 
 @custom-variant dark (&:is(.dark *));
@@ -131,4 +134,36 @@ a,
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Yjs Awareness Styles */
+.yRemoteSelection {
+  background-color: rgba(250, 129, 0, 0.15);
+}
+
+.yRemoteSelectionHead {
+  position: absolute;
+  border-left: 2px solid orange;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.yRemoteSelectionHead::after {
+  content: attr(data-user-name);
+  position: absolute;
+  top: -1.4em;
+  left: -2px;
+  background-color: inherit;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px 4px 4px 0;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow:
+    0 4px 6px -1px rgb(0 0 0 / 0.1),
+    0 2px 4px -2px rgb(0 0 0 / 0.1);
+  z-index: 10;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }

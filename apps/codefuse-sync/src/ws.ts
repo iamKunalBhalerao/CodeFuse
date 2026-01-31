@@ -2,24 +2,45 @@ import { WebSocket } from "ws";
 import * as Y from "yjs";
 import { broadcast, getRoom } from "./utils/room.utils";
 import { Room } from "./types/ws.types";
+import { IncomingMessage } from "http";
 
-export const rooms = new Map();
+export const rooms = new Map<string, Room>();
 
-export const handleConnection = (socket: WebSocket, request: Request) => {
-  let currentRoom: Room | null = null;
+export const handleConnection = (
+  socket: WebSocket,
+  request: IncomingMessage,
+) => {
+  let currentRoom: Room | null | undefined = null;
+
+  // Extract room name from URL (e.g., /room-name)
+  const urlRoom = (request.url || "").slice(1).split("?")[0];
+  if (urlRoom && urlRoom !== "") {
+    currentRoom = getRoom(urlRoom) || null;
+    if (currentRoom) {
+      currentRoom.clients.add(socket);
+    }
+  }
 
   socket.on("message", (data) => {
-    // Handle JSON messages
-    if (typeof data === "string" || data instanceof String) {
+    // Handle JSON messages (String or Buffer/Uint8Array)
+    if (
+      typeof data === "string" ||
+      data instanceof String ||
+      data instanceof Buffer
+    ) {
       try {
-        const message = JSON.parse(data.toString());
+        const messageString = data.toString();
+        const message = JSON.parse(messageString);
 
         if (message.type === "join") {
-          currentRoom = getRoom(message.room);
+          // If already in a room, leave it first
+          if (currentRoom) {
+            currentRoom.clients.delete(socket);
+          }
+
+          currentRoom = getRoom(message.room) || null;
           if (currentRoom) {
             currentRoom.clients.add(socket);
-
-            console.log(`Client joined room: ${message.room}`);
 
             // Send confirmation
             socket.send(
@@ -41,47 +62,42 @@ export const handleConnection = (socket: WebSocket, request: Request) => {
             );
 
             // Send current document state to new client
-            const stateVector = Y.encodeStateVector(currentRoom.doc);
             const update = Y.encodeStateAsUpdate(currentRoom.doc);
             socket.send(update);
           }
         }
 
-        // HERE: You can add your custom logic
-        // Log data, validate, transform, store in DB, etc.
         if (message.type === "custom") {
-          console.log("Custom message received:", message);
-          // Process and broadcast
           if (currentRoom) {
-            broadcast(currentRoom, JSON.stringify(message));
+            broadcast(currentRoom, JSON.stringify(message), socket);
           }
         }
       } catch (e) {
-        console.error("Error parsing message:", e);
+        // If it's not JSON, it might be binary (handled below)
+        if (!(data instanceof Buffer)) {
+          console.error("Error parsing message:", e);
+        }
       }
-      return;
     }
 
     // Handle binary Yjs updates
-    if (currentRoom && data instanceof Buffer) {
-      // HERE: You can intercept and process the update
-      console.log("Yjs update received, size:", data.length);
+    if (currentRoom && data instanceof Buffer && !(typeof data === "string")) {
+      try {
+        // Check if it's a valid Yjs update by attempting to apply it
+        // Note: In a production app, you'd want more robust validation
+        Y.applyUpdate(currentRoom.doc, new Uint8Array(data));
 
-      // Apply update to server's document
-      Y.applyUpdate(currentRoom.doc, new Uint8Array(data));
-
-      // Optional: Store in database
-      // await saveUpdate(currentRoom.name, data)
-
-      // Broadcast to other clients
-      broadcast(currentRoom, data, socket);
+        // Broadcast to other clients in the same room
+        broadcast(currentRoom, data, socket);
+      } catch (e) {
+        // Not a valid Yjs update or already handled as JSON
+      }
     }
   });
 
-  socket.on("close", () => {
+  socket.on("close", (code, reason) => {
     if (currentRoom) {
       currentRoom.clients.delete(socket);
-      console.log(`Client left room. Remaining: ${currentRoom.clients.size}`);
 
       // Notify others
       broadcast(
@@ -95,20 +111,12 @@ export const handleConnection = (socket: WebSocket, request: Request) => {
       // Clean up empty rooms
       if (currentRoom.clients.size === 0) {
         rooms.delete(currentRoom.name);
-        console.log(`Room ${currentRoom.name} deleted`);
       }
     }
+    console.log(`Client disconnected: ${code} - ${reason.toString()}`);
   });
 
-  // To Handle Client Close Event
-  socket.on("close", (code, reason) => {
-    console.log(
-      `Client disconnected: ${code} - ${reason.toString()}, Remaining: ${rooms.size}`,
-    );
-  });
-
-  //   To handle Error Event
-  socket.on("error", (error: unknown) => {
-    console.error(`Error occured: ${(error as Error).message}`);
+  socket.on("error", (error: Error) => {
+    console.error(`Error occurred: ${error.message}`);
   });
 };

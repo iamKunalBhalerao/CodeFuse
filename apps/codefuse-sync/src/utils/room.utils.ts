@@ -1,3 +1,4 @@
+import { WebSocket } from "ws";
 import * as Y from "yjs";
 import { rooms } from "../ws";
 
@@ -5,6 +6,7 @@ export function getRoom(roomName: string) {
   if (!rooms.has(roomName)) {
     const doc = new Y.Doc();
     rooms.set(roomName, {
+      name: roomName,
       doc,
       clients: new Set(),
     });
@@ -14,15 +16,15 @@ export function getRoom(roomName: string) {
 }
 
 export function broadcast(
-  room: { clients: Set<any> }, 
-  message: any, 
-  exclude: any = null
+  room: { clients: Set<WebSocket> },
+  message: any,
+  exclude: WebSocket | null = null,
 ) {
-  if (!room) return
-  
-  room.clients.forEach(client => {
+  if (!room) return;
+
+  room.clients.forEach((client) => {
     if (client !== exclude && client.readyState === WebSocket.OPEN) {
-      client.send(message)
+      client.send(message);
     }
-  })
+  });
 }

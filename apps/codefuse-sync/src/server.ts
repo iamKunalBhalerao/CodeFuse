@@ -1,28 +1,7 @@
-#!/usr/bin/env node
-
-// import { env } from "@repo/env/server";
-// import { WebSocketServer } from "ws";
-// import { SnapShotCalc, Users } from "./types/ws.types";
-// import { handleConnection } from "./ws";
-
-// const PORT = Number(env.SYNC_PORT) || 8080;
-// if (!PORT) throw new Error("SYNC_PORT is not defined");
-
-// const wss = new WebSocketServer({ port: PORT });
-
-// export const users: Users[] = [];
-// export const snapShotCalcs: Record<string, SnapShotCalc> = {};
-
-// wss.on("connection", handleConnection);
-
-// console.log(`WebSocket server is running on ws://localhost:${PORT}`);
-
-
-
 import { WebSocketServer } from "ws";
 import http from "http";
 import * as number from "lib0/number";
-import { setupWSConnection } from "./utils/utils";
+import { handleConnection } from "./ws";
 
 const wss = new WebSocketServer({ noServer: true });
 const host = process.env.HOST || "localhost";
@@ -33,21 +12,12 @@ const server = http.createServer((_request, response) => {
   response.end("okay");
 });
 
-wss.on("connection", setupWSConnection);
+wss.on("connection", handleConnection);
 
 server.on("upgrade", (request, socket, head) => {
-  // You may check auth of request here..
-  // Call `wss.HandleUpgrade` *after* you checked whether the client has access
-  // (e.g. by checking cookies, or url parameters).
-  // See https://github.com/websockets/ws#client-authentication
-  wss.handleUpgrade(
-    request,
-    socket,
-    head,
-    /** @param {any} ws */ (ws) => {
-      wss.emit("connection", ws, request);
-    },
-  );
+  wss.handleUpgrade(request, socket, head, (ws) => {
+    wss.emit("connection", ws, request);
+  });
 });
 
 server.listen(port, host, () => {

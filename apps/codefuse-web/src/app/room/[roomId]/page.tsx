@@ -1,26 +1,16 @@
-"use client";
-import dynamic from "next/dynamic";
 import React from "react";
-// import Editor from "@/components/Editor";
+import EditorWrapper from "@/components/EditorWrapper";
 
-const Editor = dynamic(() => import("@/components/Editor"), { ssr: false });
+interface RoomPageProps {
+  params: Promise<{ roomId: string }>;
+}
 
-const page = async ({
-  params,
-}: {
-  params: {
-    roomId: string;
-  };
-}) => {
-  const roomId = (await params).roomId;
+export default async function Page({ params }: RoomPageProps) {
+  const { roomId } = await params;
 
   return (
-    <>
-      {/* <div> */}
-      <Editor />
-      {/* </div> */}
-    </>
+    <main className="h-screen w-full overflow-hidden">
+      <EditorWrapper roomId={roomId} />
+    </main>
   );
-};
-
-export default page;
+}
