@@ -16,9 +16,9 @@ const page = async ({
 
   return (
     <>
-      <div>
-        <Editor roomName={roomId} />
-      </div>
+      {/* <div> */}
+      <Editor />
+      {/* </div> */}
     </>
   );
 };

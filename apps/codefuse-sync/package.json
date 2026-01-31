@@ -1,5 +1,5 @@
 {
-  "name": "codefuse-sync",
+  "name": "@apps/codefuse-sync",
   "version": "1.0.0",
   "private": true,
   "description": "Sync - Websocket Backend",
@@ -22,7 +22,9 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@y/protocols": "1.0.6-0",
     "axios": "^1.13.2",
+    "lib0": "^0.2.117",
     "tsx": "^4.21.0",
     "ws": "^8.19.0",
     "yjs": "^13.6.29"

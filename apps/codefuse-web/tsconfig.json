@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-, "src/yjs"  ],
+, "src/yjs", "CustomWebSocketServer/wsserver.js", "CustomWebSocketServer/callback.js", "CustomWebSocketServer/utils.js"  ],
   "exclude": ["node_modules"]
 }
