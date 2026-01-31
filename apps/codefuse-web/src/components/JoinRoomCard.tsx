@@ -23,9 +23,11 @@ export default function JoinRoomCard() {
 
     try {
       const { data } = await axios.post(
-        `${ClientEnv.NEXT_PUBLIC_CORE_API_URL}/v1/rooms/join/${formData.roomName}`,{
+        `${ClientEnv.NEXT_PUBLIC_CORE_API_URL}/v1/rooms/join/${formData.roomName}`,
+        {},
+        {
           withCredentials: true,
-        }
+        },
       );
 
       if (!data.success) {
@@ -38,14 +40,12 @@ export default function JoinRoomCard() {
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         // Accessing the error message sent from the backend response body
-        const backendMessage = err.response?.data?.message || err.response?.data?.error;
+        const backendMessage =
+          err.response?.data?.message || err.response?.data?.error;
         setError(backendMessage || "Server error occurred");
-      } 
-
-      else if (err instanceof Error) {
+      } else if (err instanceof Error) {
         setError(err.message);
-      } 
-      else {
+      } else {
         setError("An unexpected error occurred");
       }
     } finally {

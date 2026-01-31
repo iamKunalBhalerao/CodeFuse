@@ -113,7 +113,6 @@ export const handleConnection = (
         rooms.delete(currentRoom.name);
       }
     }
-    console.log(`Client disconnected: ${code} - ${reason.toString()}`);
   });
 
   socket.on("error", (error: Error) => {
