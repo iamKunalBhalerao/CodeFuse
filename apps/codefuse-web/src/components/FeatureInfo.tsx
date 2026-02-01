@@ -12,8 +12,9 @@ export default function FeatureInfoSection() {
               Built for Scaling teams
             </h2>
             <p className="mt-6 text-lg">
-              Empower your team with workflows that adapt to your needs, whether
-              you prefer git synchronization or a AI Agents interface.
+              Empower your team with workflows that scale as you grow. Whether
+              you prefer Git-based synchronization or AI-driven automation,
+              CodeFuse adapts to how your team actually works.
             </p>
           </div>
           <div className="mask-b-from-75% mask-l-from-75% mask-b-to-95% mask-l-to-95% relative -mx-4 pr-3 pt-3 md:-mx-12">
@@ -29,14 +30,14 @@ export default function FeatureInfoSection() {
                     }
                   >
                     <Image
-                      src="/HeroDark.png"
+                      src="/FeatureInfo.png"
                       className="hidden dark:block"
                       alt="payments illustration dark"
                       width={2797}
                       height={1137}
                     />
                     <Image
-                      src="/HeroLight.png"
+                      src="/FeatureInfo.png"
                       className="dark:hidden"
                       alt="payments illustration light"
                       width={2797}
@@ -51,10 +52,11 @@ export default function FeatureInfoSection() {
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <Zap className="size-4" />
-                <h3 className="text-sm font-medium">Faaast</h3>
+                <h3 className="text-sm font-medium">Fast</h3>
               </div>
               <p className="text-muted-foreground text-sm">
-                It supports an entire helping developers and innovate.
+                Built for speed from the ground up. Instant updates, real-time
+                collaboration, and zero waiting around for tools to catch up.
               </p>
             </div>
             <div className="space-y-2">
@@ -63,16 +65,19 @@ export default function FeatureInfoSection() {
                 <h3 className="text-sm font-medium">Powerful</h3>
               </div>
               <p className="text-muted-foreground text-sm">
-                It supports an entire helping developers and businesses.
+                Everything you need to build, test, and iterate in one place.
+                Designed to handle complex workflows without slowing developers
+                down.
               </p>
             </div>
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <Lock className="size-4" />
-                <h3 className="text-sm font-medium">Security</h3>
+                <h3 className="text-sm font-medium">Secure</h3>
               </div>
               <p className="text-muted-foreground text-sm">
-                It supports an helping developers businesses innovate.
+                Enterprise-grade security baked in by default. Your code, data,
+                and workflows stay protected at every step.
               </p>
             </div>
             <div className="space-y-2">

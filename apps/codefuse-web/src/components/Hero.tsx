@@ -20,16 +20,17 @@ export default function HeroSection() {
           <div className="relative mx-auto max-w-5xl px-6 pt-28 lg:pt-24">
             <div className="relative z-10 mx-auto max-w-2xl text-center">
               <h1 className="text-balance text-4xl font-semibold md:text-5xl lg:text-6xl">
-                Modern Software testing reimagined
+                Build and collaborate on code without friction
               </h1>
               <p className="text-muted-foreground mx-auto my-8 max-w-2xl text-xl">
-                Officiis laudantium excepturi ducimus rerum dignissimos, and
-                tempora nam vitae, excepturi ducimus iste provident dolores.
+                CodeFuse is a modern platform for developers to write, test, and
+                ship code together in real time. No setup chaos. No broken
+                workflows. Just fast execution.
               </p>
 
               <Button asChild size="lg">
                 <Link href="/auth/signin">
-                  <span className="btn-label">Start Building</span>
+                  <span className="btn-label">Start Collaborating</span>
                 </Link>
               </Button>
             </div>
@@ -40,15 +41,15 @@ export default function HeroSection() {
               <div className="lg:h-176 rotate-x-20 mask-b-from-55% mask-b-to-100% mask-r-from-75% skew-x-12 pl-6 pt-6">
                 <Image
                   className="rounded-(--radius) border shadow-xl dark:hidden"
-                  src="/HeroLight.png"
+                  src="/HeroImg.png"
                   alt="Tailark hero section"
                   width={2880}
                   height={2074}
                 />
                 <Image
                   className="rounded-(--radius) hidden border shadow-xl dark:block"
-                  src="/HeroDark.png"
-                  alt="Tailark hero section"
+                  src="/HeroImg.png"
+                  alt="hero section"
                   width={2880}
                   height={2074}
                 />
@@ -56,92 +57,6 @@ export default function HeroSection() {
             </div>
           </div>
         </section>
-        {/* <section className="dark:bg-background bg-muted/50 relative z-10 py-16">
-          <div className="m-auto max-w-5xl px-6">
-            <h2 className="text-center text-lg font-medium">
-              Your favorite companies are our partners.
-            </h2>
-            <div className="mx-auto mt-20 flex max-w-4xl flex-wrap items-center justify-center gap-x-12 gap-y-8 sm:gap-x-16 sm:gap-y-12">
-              <Image
-                className="h-5 w-fit dark:invert"
-                src="https://html.tailus.io/blocks/customers/nvidia.svg"
-                alt="Nvidia Logo"
-                height={20}
-                width={100}
-              />
-              <Image
-                className="h-4 w-fit dark:invert"
-                src="https://html.tailus.io/blocks/customers/column.svg"
-                alt="Column Logo"
-                height={16}
-                width={100}
-              />
-              <Image
-                className="h-4 w-fit dark:invert"
-                src="https://html.tailus.io/blocks/customers/github.svg"
-                alt="GitHub Logo"
-                height={16}
-                width={100}
-              />
-              <Image
-                className="h-5 w-fit dark:invert"
-                src="https://html.tailus.io/blocks/customers/nike.svg"
-                alt="Nike Logo"
-                height={20}
-                width={100}
-              />
-              <Image
-                className="h-4 w-fit dark:invert"
-                src="https://html.tailus.io/blocks/customers/laravel.svg"
-                alt="Laravel Logo"
-                height={16}
-                width={100}
-              />
-              <Image
-                className="h-7 w-fit dark:invert"
-                src="https://html.tailus.io/blocks/customers/lilly.svg"
-                alt="Lilly Logo"
-                height={28}
-                width={100}
-              />
-              <Image
-                className="h-5 w-fit dark:invert"
-                src="https://html.tailus.io/blocks/customers/lemonsqueezy.svg"
-                alt="Lemon Squeezy Logo"
-                height={20}
-                width={100}
-              />
-              <Image
-                className="h-6 w-fit dark:invert"
-                src="https://html.tailus.io/blocks/customers/openai.svg"
-                alt="OpenAI Logo"
-                height={24}
-                width={100}
-              />
-              <Image
-                className="h-4 w-fit dark:invert"
-                src="https://html.tailus.io/blocks/customers/tailwindcss.svg"
-                alt="Tailwind CSS Logo"
-                height={16}
-                width={100}
-              />
-              <Image
-                className="h-5 w-fit dark:invert"
-                src="https://html.tailus.io/blocks/customers/vercel.svg"
-                alt="Vercel Logo"
-                height={20}
-                width={100}
-              />
-              <Image
-                className="h-5 w-fit dark:invert"
-                src="https://html.tailus.io/blocks/customers/zapier.svg"
-                alt="Zapier Logo"
-                height={20}
-                width={100}
-              />
-            </div>
-          </div>
-        </section> */}
       </div>
       <div className="p-px w-full md:w-6xl mx-auto bg-gray-500/20 mt-5"></div>
     </>

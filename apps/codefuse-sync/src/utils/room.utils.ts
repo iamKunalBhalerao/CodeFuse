@@ -10,7 +10,6 @@ export function getRoom(roomName: string) {
       doc,
       clients: new Set(),
     });
-    console.log(`Created room: ${roomName}`);
   }
   return rooms.get(roomName);
 }
