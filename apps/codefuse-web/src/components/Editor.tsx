@@ -7,6 +7,7 @@ import { MonacoBinding } from "y-monaco";
 import { EditorHeader } from "./EditorHeader";
 import Terminal, { TerminalHandle } from "./Terminal";
 import axios from "axios";
+import { createYjsDoc } from "../yjs/doc";
 
 const LANGUAGE_VERSIONS: Record<string, string> = {
   typescript: "5.0.3",
@@ -17,10 +18,12 @@ const LANGUAGE_VERSIONS: Record<string, string> = {
 };
 
 export default function Editor({ roomId }: { roomId: string }) {
+
   const containerRef = useRef<HTMLDivElement>(null);
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
   const terminalRef = useRef<TerminalHandle>(null);
   const configMapRef = useRef<Y.Map<any> | null>(null);
+
   const [language, setLanguage] = useState("typescript");
   const [isRunning, setIsRunning] = useState(false);
   const [status, setStatus] = useState<
@@ -30,8 +33,7 @@ export default function Editor({ roomId }: { roomId: string }) {
   useEffect(() => {
     if (!roomId || !containerRef.current) return;
 
-    const ydoc = new Y.Doc();
-    const ytext = ydoc.getText("monaco");
+    const {ydoc, ytext} = createYjsDoc();
 
     const provider = new WebsocketProvider("ws://localhost:8080", roomId, ydoc);
 

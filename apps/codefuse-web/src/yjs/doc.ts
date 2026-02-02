@@ -1,8 +1,8 @@
 import * as Y from "yjs";
 
 export const createYjsDoc = () => {
-  const doc = new Y.Doc();
-  const text = doc.getText("editor");
+  const ydoc = new Y.Doc();
+  const ytext = ydoc.getText("monaco");
 
-  return { doc, text };
+  return { ydoc, ytext };
 };
